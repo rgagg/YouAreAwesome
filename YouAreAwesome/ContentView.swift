@@ -8,16 +8,27 @@
 import SwiftUI
 
 struct ContentView: View {
+  @State private var message = "I am an app developer!"
+  
   var body: some View {
     VStack {
+      
       Image(systemName: "swift")
         .resizable()
         .scaledToFit()
         .foregroundStyle(.orange)
-      Text("I am an app developer!")
+      
+      Text(message)
         .font(.largeTitle)
         .fontWeight(.heavy)
         .foregroundStyle(.red)
+      
+      Button {
+        message = "You are awesome!"
+      } label: {
+        Text("Click Me!")
+      }
+
     }
     .padding()
   }
