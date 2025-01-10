@@ -9,7 +9,9 @@ import SwiftUI
 
 struct ContentView: View {
   //  @State private var messageString = "I'm a programer!"
-  @State private var messageString = "When the genius bar needs help, they call you!"
+  @State private var messageString = ""
+  @State private var imageName: String = ""
+  
   var screenHeight: CGFloat { UIScreen.main.bounds.height }
   var screenWidth: CGFloat { UIScreen.main.bounds.width }
   
@@ -21,11 +23,11 @@ struct ContentView: View {
         
         Spacer()
         
-        Image(systemName: "swift")
+        Image(systemName: imageName)
           .resizable()
           .scaledToFit()
           .foregroundStyle(.orange)
-          .frame(width: 200, height: 200)
+        //          .frame(width: 200, height: 200)
         
         Text(messageString)
           .font(.largeTitle)
@@ -40,20 +42,21 @@ struct ContentView: View {
         
         Spacer()
         
-        HStack {
-          Button {
-            messageString = "Awesome!"
-          } label: {
-            Text("Awesome")
-          }
+        Button {
+          let message1 = "You Are Awesome!"
+          let message2 = "You Are Great!"
+          let image1 = "sun.max.fill"
+          let image2 = "hand.thumbsup"
           
-          Spacer()
-          
-          Button {
-            messageString = "Great!"
-          } label: {
-            Text("Great")
+          if messageString == message1 {
+            messageString = message2
+            imageName = image1
+          } else {
+            messageString = message1
+            imageName = image2
           }
+        } label: {
+          Text("Press Me!")
         }
         .buttonStyle(.borderedProminent)
         .font(.title2)
