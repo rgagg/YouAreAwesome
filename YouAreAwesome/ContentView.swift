@@ -6,11 +6,16 @@
 //
 
 import SwiftUI
+import AVFAudio
 
 struct ContentView: View {
   @State private var imageName: String = ""
   @State private var imageNumber: Int = 0
   @State private var lastImageNumber: Int = -1
+  @State private var soundName: String = ""
+  @State private var soundNumber: Int = 0
+  @State private var lastSoundNumber: Int = -1
+  @State private var audioPlayer: AVAudioPlayer!
   
   @State private var messageString: String = ""
   @State private var lastMessageIndex: Int = -1
@@ -61,7 +66,8 @@ struct ContentView: View {
         Button {
           var messageIndex: Int
           var imageNumber: Int
-          
+          var soundNumber:Int
+
           repeat {
             messageIndex = Int.random(in: 0...message.count - 1)
           } while messageIndex == lastMessageIndex
@@ -70,17 +76,41 @@ struct ContentView: View {
             imageNumber = Int.random(in: 0...9)
           } while imageNumber == lastImageNumber
           
+          repeat {
+            soundNumber = Int.random(in: 0...4)
+            // Sound5 plays for a longtime. Too long.
+          } while soundNumber == lastSoundNumber
+          
           lastMessageIndex = messageIndex
           lastImageNumber = imageNumber
           
           messageString = (message[messageIndex])
           imageName = "image\(imageNumber)"
           
+          soundName = "sound\(soundNumber)"
+          lastSoundNumber = soundNumber
+          
+          guard let soundFile = NSDataAsset(name: soundName) else
+          {
+            print("🤬 Could not read file named \(soundName)")
+            return
+          }
+          
+          do {
+            audioPlayer = try AVAudioPlayer(data: soundFile.data)
+            audioPlayer.play()
+          } catch {
+            print("🤬 ERROR: \(error.localizedDescription) creating audioPlayer")
+          }
+          
         } label: {
           Text("Click Me!")
         }
         .buttonStyle(.borderedProminent)
         .font(.title2)
+        .shadow(color: .gray, radius: 10, x: 10, y: 10)
+
+        
       }
       .padding()
       
