@@ -69,12 +69,13 @@ struct ContentView: View {
           Toggle("Sound On:", isOn: $soundIsOn)
             .labelsHidden()
             .onChange(of: soundIsOn) {
-              if audioPlayer.isPlaying {
+              if audioPlayer != nil && audioPlayer.isPlaying {
                 audioPlayer.stop()
               }
             }
           
           Spacer()
+          
           Button {
             lastMessageIndex = nonRepeatingRandom(lastNumber: lastImageNumber, upperBounds: (message.count - 1))
             messageString = (message[lastMessageIndex])
