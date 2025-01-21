@@ -36,32 +36,34 @@ struct ContentView: View {
   var body: some View {
     
     ZStack {
-      
       LinearGradient(colors: [.blue, .clear],
                      startPoint: .top,
                      endPoint: .bottom)
       .ignoresSafeArea()
       
       VStack() {
-        
-        Text(messageString)
-          .font(.largeTitle)
-          .minimumScaleFactor(0.5)
-          .multilineTextAlignment(.center)
-          .foregroundStyle(.white)
-          .fontWeight(.heavy)
-          .shadow(color: .black, radius: 10, x: 10, y: 10)
-          .frame(height: 100)
-          .frame(maxWidth: .infinity)
-          .padding(.horizontal)
-        
-        Image(imageName)
-          .resizable()
-          .scaledToFit()
-          .clipShape(RoundedRectangle(cornerRadius: 20))
-          .shadow(color: .black, radius: 20, x: 20, y: 20)
-          .padding()
-        
+        Group {
+          Text(messageString)
+            .font(.largeTitle)
+            .minimumScaleFactor(0.5)
+            .multilineTextAlignment(.center)
+            .foregroundStyle(.white)
+            .fontWeight(.heavy)
+            .shadow(color: .black, radius: 10, x: 10, y: 10)
+            .frame(height: 100)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal)
+          
+          Image(imageName)
+            .resizable()
+            .scaledToFit()
+            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .shadow(color: .black, radius: 20, x: 20, y: 20)
+            .padding()
+        }
+        .animation(.easeInOut(duration: 0.3), value: messageString)
+
+
         Spacer()
         
         HStack {
@@ -93,7 +95,6 @@ struct ContentView: View {
           }
           .buttonStyle(.borderedProminent)
           .font(.title2)
-          .shadow(color: .gray, radius: 10, x: 10, y: 10)
         }
         
       }
