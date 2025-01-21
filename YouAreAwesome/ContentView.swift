@@ -75,7 +75,6 @@ struct ContentView: View {
             }
           
           Spacer()
-          
           Button {
             lastMessageIndex = nonRepeatingRandom(lastNumber: lastImageNumber, upperBounds: (message.count - 1))
             messageString = (message[lastMessageIndex])
