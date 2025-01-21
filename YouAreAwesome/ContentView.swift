@@ -16,6 +16,7 @@ struct ContentView: View {
   @State private var soundNumber: Int = 0
   @State private var lastSoundNumber: Int = -1
   @State private var audioPlayer: AVAudioPlayer!
+  @State private var soundIsOn: Bool = true
   
   @State private var messageString: String = ""
   @State private var lastMessageIndex: Int = -1
@@ -63,57 +64,65 @@ struct ContentView: View {
         
         Spacer()
         
-        Button {
-          var messageIndex: Int
-          var imageNumber: Int
-          var soundNumber:Int
-
-          repeat {
-            messageIndex = Int.random(in: 0...message.count - 1)
-          } while messageIndex == lastMessageIndex
+        HStack {
+          Text("Sound On: ")
+          Toggle("Sound On:", isOn: $soundIsOn)
+            .labelsHidden()
+            .onChange(of: soundIsOn) {
+              if audioPlayer.isPlaying {
+                audioPlayer.stop()
+              }
+            }
           
-          repeat {
-            imageNumber = Int.random(in: 0...9)
-          } while imageNumber == lastImageNumber
+          Spacer()
           
-          repeat {
-            soundNumber = Int.random(in: 0...4)
-            // Sound5 plays for a longtime. Too long.
-          } while soundNumber == lastSoundNumber
-          
-          lastMessageIndex = messageIndex
-          lastImageNumber = imageNumber
-          
-          messageString = (message[messageIndex])
-          imageName = "image\(imageNumber)"
-          
-          soundName = "sound\(soundNumber)"
-          lastSoundNumber = soundNumber
-          
-          guard let soundFile = NSDataAsset(name: soundName) else
-          {
-            print("🤬 Could not read file named \(soundName)")
-            return
+          Button {
+            lastMessageIndex = nonRepeatingRandom(lastNumber: lastImageNumber, upperBounds: (message.count - 1))
+            messageString = (message[lastMessageIndex])
+            
+            lastImageNumber = nonRepeatingRandom(lastNumber: lastImageNumber,  upperBounds: 9)
+            imageName = "image\(lastImageNumber)"
+            
+            lastSoundNumber = nonRepeatingRandom(lastNumber: lastSoundNumber, upperBounds: 4)
+            if soundIsOn == true {
+              playSound(soundName: "sound\(lastSoundNumber)")
+            }
+           
+          } label: {
+            Text("Click Me!")
           }
-          
-          do {
-            audioPlayer = try AVAudioPlayer(data: soundFile.data)
-            audioPlayer.play()
-          } catch {
-            print("🤬 ERROR: \(error.localizedDescription) creating audioPlayer")
-          }
-          
-        } label: {
-          Text("Click Me!")
+          .buttonStyle(.borderedProminent)
+          .font(.title2)
+          .shadow(color: .gray, radius: 10, x: 10, y: 10)
         }
-        .buttonStyle(.borderedProminent)
-        .font(.title2)
-        .shadow(color: .gray, radius: 10, x: 10, y: 10)
-
         
       }
       .padding()
-      
+    }
+  }
+  
+  func nonRepeatingRandom(lastNumber: Int, upperBounds: Int) -> Int {
+    var newNumber = 0
+    
+    repeat {
+      newNumber = Int.random(in: 0...upperBounds)
+    } while lastNumber == newNumber
+    return newNumber
+  }
+  
+  func playSound(soundName: String) {
+    
+    guard let soundFile = NSDataAsset(name: soundName) else
+    {
+      print("🤬 Could not read file named \(soundName)")
+      return
+    }
+    
+    do {
+      audioPlayer = try AVAudioPlayer(data: soundFile.data)
+      audioPlayer.play()
+    } catch {
+      print("🤬 ERROR: \(error.localizedDescription) creating audioPlayer")
     }
   }
 }
